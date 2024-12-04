@@ -1,0 +1,23 @@
+spring:
+  h2:
+    console:
+      enabled: 'true'
+  datasource:
+    username: sa
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    password: password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        show_sql: true
+    database: mysql
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: db/changelog/changelog-master.xml
+logging:
+  level:
+    org.hibernate.type.descriptor.sql: trace

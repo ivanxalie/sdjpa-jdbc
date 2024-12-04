@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
+
+    <changeSet id="2-create-author-table" author="ivanxalie">
+        <createTable tableName="author">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3-create-book-table" author="ivanxalie">
+        <createTable tableName="book">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="isbn" type="VARCHAR(255)"/>
+            <column name="publisher" type="VARCHAR(255)"/>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="author_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4-add-foreign-key" author="ivanxalie">
+        <addForeignKeyConstraint baseTableName="book"
+                                 baseColumnNames="author_id"
+                                 referencedTableName="author"
+                                 referencedColumnNames="id"
+                                 constraintName="book_author_fk"/>
+    </changeSet>
+
+    <changeSet id="5-insert-authors" author="ivanxalie">
+        <insert tableName="author">
+            <column name="first_name" value="Craig"/>
+            <column name="last_name" value="Walls"/>
+        </insert>
+        <insert tableName="author">
+            <column name="first_name" value="Eric"/>
+            <column name="last_name" value="Evans"/>
+        </insert>
+        <insert tableName="author">
+            <column name="first_name" value="Robert"/>
+            <column name="last_name" value="Martin"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="6-insert-books" author="ivanxalie">
+        <insert tableName="book">
+            <column name="isbn" value="978-1617294945"/>
+            <column name="publisher" value="Simon &amp; Schuster"/>
+            <column name="title" value="Spring in Action, 5th Edition"/>
+            <column name="author_id" valueComputed="(SELECT id FROM author WHERE first_name = 'Craig' AND last_name = 'Walls')"/>
+        </insert>
+        <insert tableName="book">
+            <column name="isbn" value="978-1617292545"/>
+            <column name="publisher" value="Simon &amp; Schuster"/>
+            <column name="title" value="Spring Boot in Action, 1st Edition"/>
+            <column name="author_id" valueComputed="(SELECT id FROM author WHERE first_name = 'Craig' AND last_name = 'Walls')"/>
+        </insert>
+        <insert tableName="book">
+            <column name="isbn" value="978-1617297571"/>
+            <column name="publisher" value="Simon &amp; Schuster"/>
+            <column name="title" value="Spring in Action, 6th Edition"/>
+            <column name="author_id" valueComputed="(SELECT id FROM author WHERE first_name = 'Craig' AND last_name = 'Walls')"/>
+        </insert>
+        <insert tableName="book">
+            <column name="isbn" value="978-0321125217"/>
+            <column name="publisher" value="Addison Wesley"/>
+            <column name="title" value="Domain-Driven Design"/>
+            <column name="author_id" valueComputed="(SELECT id FROM author WHERE first_name = 'Eric' AND last_name = 'Evans')"/>
+        </insert>
+        <insert tableName="book">
+            <column name="isbn" value="978-0134494166"/>
+            <column name="publisher" value="Addison Wesley"/>
+            <column name="title" value="Clean Code"/>
+            <column name="author_id" valueComputed="(SELECT id FROM author WHERE first_name = 'Robert' AND last_name = 'Martin')"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
