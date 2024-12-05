@@ -24,16 +24,20 @@ public class AuthorDaoImpl implements AuthorDao {
                 idFunction(singleAuthorMapper(id)), id);
     }
 
-    private <TYPE> Function<ResultSet, TYPE> idFunction(Mapper<TYPE> mapper) {
-        return resultSet -> getSingleFromResultSet(resultSet, mapper);
+    @SneakyThrows
+    private <TYPE> TYPE execute(String sql, Function<ResultSet, TYPE> function, Object... params) {
+        try (Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                for (int i = 0; i < params.length; i++) {
+                    statement.setObject(i + 1, params[i]);
+                }
+                return function.apply(statement.executeQuery());
+            }
+        }
     }
 
-    private Mapper<Author> singleAuthorMapper(Long id) {
-        return resultSet -> Author.builder()
-                .id(id)
-                .firstName(resultSet.getString(2))
-                .lastName(resultSet.getString(3))
-                .build();
+    private <TYPE> Function<ResultSet, TYPE> idFunction(Mapper<TYPE> mapper) {
+        return resultSet -> getSingleFromResultSet(resultSet, mapper);
     }
 
     private <TYPE> TYPE getSingleFromResultSet(ResultSet resultSet, Mapper<TYPE> mapper) {
@@ -51,16 +55,12 @@ public class AuthorDaoImpl implements AuthorDao {
         return null;
     }
 
-    @SneakyThrows
-    private <TYPE> TYPE execute(String sql, Function<ResultSet, TYPE> function, Object... params) {
-        try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                for (int i = 0; i < params.length; i++) {
-                    statement.setObject(i + 1, params[i]);
-                }
-                return function.apply(statement.executeQuery());
-            }
-        }
+    private Mapper<Author> singleAuthorMapper(Long id) {
+        return resultSet -> Author.builder()
+                .id(id)
+                .firstName(resultSet.getString(2))
+                .lastName(resultSet.getString(3))
+                .build();
     }
 
     interface Mapper<TO> {
