@@ -1,6 +1,5 @@
 package guru.springframework.jdbc.dao;
 
-import guru.springframework.jdbc.domain.Author;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
@@ -18,7 +17,7 @@ public class DataSourceExecutor {
     private final DataSource dataSource;
 
     @SneakyThrows
-    public  <TYPE> TYPE select(String sql, Function<ResultSet, TYPE> function, Object... params) {
+    public <TYPE> TYPE select(String sql, Function<ResultSet, TYPE> function, Object... params) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 for (int i = 0; i < params.length; i++) {
@@ -81,7 +80,7 @@ public class DataSourceExecutor {
         }
     }
 
-    public  <TYPE> Function<ResultSet, TYPE> idFunction(Mapper<TYPE> mapper) {
+    public <TYPE> Function<ResultSet, TYPE> idFunction(Mapper<TYPE> mapper) {
         return resultSet -> getSingleFromResultSet(resultSet, mapper);
     }
 
@@ -100,12 +99,15 @@ public class DataSourceExecutor {
         return null;
     }
 
-    public Mapper<Author> singleAuthorMapper() {
-        return resultSet -> Author.builder()
-                .id(resultSet.getLong(1))
-                .firstName(resultSet.getString(2))
-                .lastName(resultSet.getString(3))
-                .build();
+    public void delete(String tableName, Long id) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = String.format("delete from %s where id = ?", tableName);
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setLong(1, id);
+                statement.executeUpdate();
+            }
+        } catch (Exception e) {
+        }
     }
 
     interface Mapper<TO> {

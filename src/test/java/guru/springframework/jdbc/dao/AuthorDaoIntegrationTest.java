@@ -67,4 +67,13 @@ class AuthorDaoIntegrationTest {
         authorToUpdate.setLastName(previousLastName);
         authorDao.update(authorToUpdate);
     }
+
+    @Test
+    void testDelete() {
+        Author author = authorDao.saveNew(Author.builder().build());
+
+        authorDao.delete(author.getId());
+
+        assertThat(authorDao.getById(author.getId())).isNull();
+    }
 }
