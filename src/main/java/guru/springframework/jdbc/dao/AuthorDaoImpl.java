@@ -19,7 +19,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author getById(Long id) {
-        return execute(
+        return select(
                 "select id, first_name, last_name from author where id = ?",
                 idFunction(singleAuthorMapper()),
                 id
@@ -29,7 +29,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Author getByName(String firstName, String lastName) {
-        return execute(
+        return select(
                 "select id, first_name, last_name from author where first_name = ? and last_name = ?",
                 idFunction(singleAuthorMapper()),
                 firstName,
@@ -38,7 +38,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @SneakyThrows
-    private <TYPE> TYPE execute(String sql, Function<ResultSet, TYPE> function, Object... params) {
+    private <TYPE> TYPE select(String sql, Function<ResultSet, TYPE> function, Object... params) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 for (int i = 0; i < params.length; i++) {
