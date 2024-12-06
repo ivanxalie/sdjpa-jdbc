@@ -11,6 +11,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
     private final DataSourceExecutor executor;
+    private final AuthorDao authorDao;
 
     private DataSourceExecutor.Mapper<Book> singleBookMapper() {
         return resultSet -> Book.builder()
@@ -18,7 +19,7 @@ public class BookDaoImpl implements BookDao {
                 .title(resultSet.getString(2))
                 .publisher(resultSet.getString(3))
                 .isbn(resultSet.getString(4))
-                .authorId(resultSet.getLong(5))
+                .author(authorDao.getById(resultSet.getLong(5)))
                 .build();
     }
 
