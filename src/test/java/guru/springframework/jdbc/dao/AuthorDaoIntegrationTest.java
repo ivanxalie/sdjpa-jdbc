@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import(AuthorDaoImpl.class)
+@Import({AuthorDaoImpl.class, DataSourceExecutor.class})
 class AuthorDaoIntegrationTest {
     @Autowired
     AuthorDao authorDao;
@@ -49,5 +49,22 @@ class AuthorDaoIntegrationTest {
             assertThat(selectedAuthor.getFirstName()).isEqualTo("Andrew");
             assertThat(selectedAuthor.getLastName()).isEqualTo("Bean");
         });
+    }
+
+    @Test
+    void testUpdate() {
+        Author authorToUpdate = authorDao.getById(1L);
+        String previousLastName = authorToUpdate.getLastName();
+        authorToUpdate.setLastName("Carlione");
+
+        authorDao.update(authorToUpdate);
+
+        Author fetched = authorDao.getById(authorToUpdate.getId());
+
+        assertThat(fetched).isNotNull();
+        assertThat(fetched.getLastName()).isEqualTo("Carlione");
+
+        authorToUpdate.setLastName(previousLastName);
+        authorDao.update(authorToUpdate);
     }
 }
