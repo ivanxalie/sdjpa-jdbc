@@ -106,7 +106,7 @@ public class DataSourceExecutor {
                 statement.setLong(1, id);
                 statement.executeUpdate();
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
