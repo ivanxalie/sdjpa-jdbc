@@ -38,7 +38,10 @@ class AuthorDaoIntegrationTest {
 
     @Test
     void testInsert() {
-        Author author = authorDao.saveNew("Andrew", "Bean");
+        Author author = authorDao.saveNew(Author.builder()
+                .firstName("Andrew")
+                .lastName("Bean")
+                .build());
 
         Author saved = authorDao.getById(author.getId());
 

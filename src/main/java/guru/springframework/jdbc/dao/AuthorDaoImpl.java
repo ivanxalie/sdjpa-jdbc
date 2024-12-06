@@ -24,7 +24,6 @@ public class AuthorDaoImpl implements AuthorDao {
                 idFunction(singleAuthorMapper()),
                 id
         );
-
     }
 
     @Override
@@ -39,13 +38,10 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     @SneakyThrows
-    public Author saveNew(String firstName, String lastName) {
-        Long id = insert("author", Map.of("first_name", firstName, "last_name", lastName));
-        return Author.builder()
-                .id(id)
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
+    public Author saveNew(Author author) {
+        Long id = insert("author", Map.of("first_name", author.getFirstName(), "last_name", author.getLastName()));
+        author.setId(id);
+        return author;
     }
 
     @SneakyThrows
