@@ -35,4 +35,16 @@ class AuthorDaoIntegrationTest {
         assertThat(author).isNotNull().satisfies(selectedAuthor -> assertThat(selectedAuthor.getId())
                 .isEqualTo(1L));
     }
+
+    @Test
+    void testInsert() {
+        Author author = authorDao.saveNew("Andrew", "Bean");
+
+        Author saved = authorDao.getById(author.getId());
+
+        assertThat(saved).isNotNull().satisfies(selectedAuthor -> {
+            assertThat(selectedAuthor.getFirstName()).isEqualTo("Andrew");
+            assertThat(selectedAuthor.getLastName()).isEqualTo("Bean");
+        });
+    }
 }

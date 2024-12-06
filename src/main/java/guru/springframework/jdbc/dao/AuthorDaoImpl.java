@@ -6,10 +6,10 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -37,6 +37,17 @@ public class AuthorDaoImpl implements AuthorDao {
         );
     }
 
+    @Override
+    @SneakyThrows
+    public Author saveNew(String firstName, String lastName) {
+        Long id = insert("author", Map.of("first_name", firstName, "last_name", lastName));
+        return Author.builder()
+                .id(id)
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
+    }
+
     @SneakyThrows
     private <TYPE> TYPE select(String sql, Function<ResultSet, TYPE> function, Object... params) {
         try (Connection connection = dataSource.getConnection()) {
@@ -46,6 +57,36 @@ public class AuthorDaoImpl implements AuthorDao {
                 }
                 return function.apply(statement.executeQuery());
             }
+        }
+    }
+
+    private Long insert(String tableName, Map<String, Object> params) {
+        try (Connection connection = dataSource.getConnection()) {
+            List<String> questionMarks = new ArrayList<>();
+            for (int i = 0; i < params.size(); i++)
+                questionMarks.add("?");
+            String sql = "insert into " +
+                    tableName +
+                    "(" +
+                    String.join(",", params.keySet()) +
+                    ") values (" +
+                    String.join(",", questionMarks) +
+                    ")";
+            try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                ArrayList<Object> objects = new ArrayList<>(params.values());
+                for (int i = 0; i < objects.size(); i++) {
+                    statement.setObject(i + 1, objects.get(i));
+                }
+                statement.executeUpdate();
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getLong(1);
+                    }
+                }
+                return null;
+            }
+        } catch (Exception e) {
+            return null;
         }
     }
 
