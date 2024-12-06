@@ -18,10 +18,16 @@ public class AuthorDaoImpl implements AuthorDao {
     private final DataSource dataSource;
 
     @Override
-    @SneakyThrows
     public Author getById(Long id) {
-        return execute("select id, first_name, last_name from author where id = ?",
-                idFunction(singleAuthorMapper(id)), id);
+        return execute(
+                "select id, first_name, last_name from author where id = ?",
+                idFunction(singleAuthorMapper()), id);
+    }
+
+    @Override
+    public Author getByName(String firstName, String lastName) {
+        return execute("select id, first_name, last_name from author where first_name = ? and last_name = ?",
+                idFunction(singleAuthorMapper()), firstName, lastName);
     }
 
     @SneakyThrows
@@ -55,9 +61,9 @@ public class AuthorDaoImpl implements AuthorDao {
         return null;
     }
 
-    private Mapper<Author> singleAuthorMapper(Long id) {
+    private Mapper<Author> singleAuthorMapper() {
         return resultSet -> Author.builder()
-                .id(id)
+                .id(resultSet.getLong(1))
                 .firstName(resultSet.getString(2))
                 .lastName(resultSet.getString(3))
                 .build();

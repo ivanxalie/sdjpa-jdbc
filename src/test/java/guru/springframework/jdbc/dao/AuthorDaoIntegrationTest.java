@@ -19,12 +19,20 @@ class AuthorDaoIntegrationTest {
     AuthorDao authorDao;
 
     @Test
-    void testGetAuthor() {
+    void testGetAuthorById() {
         Author author = authorDao.getById(1L);
 
-        assertThat(author).isNotNull().satisfies(selectedAuthor1 -> {
-            assertThat(selectedAuthor1.getFirstName()).isEqualTo("Craig");
-            assertThat(selectedAuthor1.getLastName()).isEqualTo("Walls");
+        assertThat(author).isNotNull().satisfies(selectedAuthor -> {
+            assertThat(selectedAuthor.getFirstName()).isEqualTo("Craig");
+            assertThat(selectedAuthor.getLastName()).isEqualTo("Walls");
         });
+    }
+
+    @Test
+    void testGetAuthorByName() {
+        Author author = authorDao.getByName("Craig", "Walls");
+
+        assertThat(author).isNotNull().satisfies(selectedAuthor -> assertThat(selectedAuthor.getId())
+                .isEqualTo(1L));
     }
 }
