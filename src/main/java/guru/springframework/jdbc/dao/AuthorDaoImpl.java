@@ -21,13 +21,20 @@ public class AuthorDaoImpl implements AuthorDao {
     public Author getById(Long id) {
         return execute(
                 "select id, first_name, last_name from author where id = ?",
-                idFunction(singleAuthorMapper()), id);
+                idFunction(singleAuthorMapper()),
+                id
+        );
+
     }
 
     @Override
     public Author getByName(String firstName, String lastName) {
-        return execute("select id, first_name, last_name from author where first_name = ? and last_name = ?",
-                idFunction(singleAuthorMapper()), firstName, lastName);
+        return execute(
+                "select id, first_name, last_name from author where first_name = ? and last_name = ?",
+                idFunction(singleAuthorMapper()),
+                firstName,
+                lastName
+        );
     }
 
     @SneakyThrows
