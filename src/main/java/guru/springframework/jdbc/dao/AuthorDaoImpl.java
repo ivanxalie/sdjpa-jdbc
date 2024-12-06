@@ -62,7 +62,7 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         executor.delete("author", id);
     }
 }

@@ -69,10 +69,10 @@ class AuthorDaoIntegrationTest {
     }
 
     @Test
-    void testDelete() {
+    void testDeleteById() {
         Author author = authorDao.saveNew(Author.builder().build());
 
-        authorDao.delete(author.getId());
+        authorDao.deleteById(author.getId());
 
         assertThat(authorDao.getById(author.getId())).isNull();
     }
