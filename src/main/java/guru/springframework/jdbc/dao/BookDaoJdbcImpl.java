@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class BookDaoImpl implements BookDao {
+public class BookDaoJdbcImpl implements BookDao {
     private final DataSourceExecutor executor;
     private final AuthorDao authorDao;
 

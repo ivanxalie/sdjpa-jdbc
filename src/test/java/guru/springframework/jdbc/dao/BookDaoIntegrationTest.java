@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("local")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({BookDaoImpl.class, AuthorDaoImpl.class, DataSourceExecutor.class})
+@Import({BookDaoJdbcImpl.class, AuthorDaoJdbc.class, DataSourceExecutor.class})
 class BookDaoIntegrationTest {
     @Autowired
     BookDao bookDao;

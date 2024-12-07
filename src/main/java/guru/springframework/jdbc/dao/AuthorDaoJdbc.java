@@ -3,14 +3,13 @@ package guru.springframework.jdbc.dao;
 import guru.springframework.jdbc.domain.Author;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Objects;
 
-@Component
+//@Component
 @RequiredArgsConstructor
-public class AuthorDaoImpl implements AuthorDao {
+public class AuthorDaoJdbc implements AuthorDao {
     private final DataSourceExecutor executor;
 
     @Override
