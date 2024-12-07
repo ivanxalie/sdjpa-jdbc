@@ -49,6 +49,8 @@ class AuthorDaoIntegrationTest {
             assertThat(selectedAuthor.getFirstName()).isEqualTo("Andrew");
             assertThat(selectedAuthor.getLastName()).isEqualTo("Bean");
         });
+
+        authorDao.deleteById(saved.getId());
     }
 
     @Test
