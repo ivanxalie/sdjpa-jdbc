@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
+//@Component
 @RequiredArgsConstructor
-public class BookDaoJdbcImpl implements BookDao {
+public class BookDaoJdbc implements BookDao {
     private final DataSourceExecutor executor;
     private final AuthorDao authorDao;
 
