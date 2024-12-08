@@ -25,6 +25,7 @@ class AuthorDaoIntegrationTest {
         assertThat(author).isNotNull().satisfies(selectedAuthor -> {
             assertThat(selectedAuthor.getFirstName()).isEqualTo("Craig");
             assertThat(selectedAuthor.getLastName()).isEqualTo("Walls");
+            assertThat(selectedAuthor.getBooks()).isNotNull().hasSize(3);
         });
     }
 
